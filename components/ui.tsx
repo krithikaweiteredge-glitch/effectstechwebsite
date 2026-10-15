@@ -99,7 +99,7 @@ export function PageHero({
     <section
       data-page-hero
       data-theme="noir"
-      className="relative flex min-h-[82svh] items-end overflow-hidden bg-black text-white"
+      className="relative flex min-h-svh items-end overflow-hidden bg-black text-white"
       // Heroes sit on dark photography, so always use the bright champagne foil.
       style={{ ["--accent" as string]: "#c9a96e", ["--accent-2" as string]: "#f1dfb4" }}
     >
