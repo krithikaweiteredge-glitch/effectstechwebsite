@@ -6,7 +6,7 @@ import IndiaMap from "@/components/IndiaMap";
 import CameraWalk from "@/components/motion/CameraWalk";
 import Showcase from "@/components/motion/Showcase";
 import { Arrow, Photo } from "@/components/ui";
-import { faces, heroImages, houses, projects, stats, verticals } from "@/lib/data";
+import { faces, heroImages, houses, projects, stats, verticals, getVertical } from "@/lib/data";
 
 // Mosaic placement for the six "faces" tiles on a 4-column grid.
 const faceSpans = [
@@ -28,7 +28,12 @@ const tileAccent: Record<string, string> = {
 export default function Home() {
   const signature = projects.slice(0, 6);
   // The gallery walk uses the projects not already in the showcase, so nothing appears twice.
-  const frames = projects.slice(6, 18).map((p) => ({ image: p.gallery?.[2] ?? p.image, caption: p.title }));
+  const frames = projects.slice(6, 18).map((p) => ({
+    image: p.gallery?.[2] ?? p.image,
+    title: p.title,
+    meta: `${getVertical(p.vertical)?.short} · ${p.location ?? p.category}`,
+    href: `/work/${p.slug}`,
+  }));
 
   return (
     <>

@@ -392,21 +392,66 @@ body {
   .grain { animation: none; }
 }
 
-/* Camera-walk gallery. */
+/* Camera-walk gallery: a darkened corridor of photographs. */
 .walk-stage {
-  perspective: 900px;
-  perspective-origin: 50% 50%;
+  perspective: 1400px;
+  perspective-origin: 50% 46%;
 }
 .walk-world {
   transform-style: preserve-3d;
+  will-change: transform;
 }
-.walk-frame {
-  width: clamp(200px, 30vw, 480px);
-  will-change: opacity;
+.walk-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--panel-w, 640px);
+  margin: 0;
+  will-change: transform, opacity;
 }
-@media (max-width: 767px) {
-  .walk-frame {
-    width: 52vw;
+.walk-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1300 / 850;
+  object-fit: cover;
+  outline: 1px solid rgb(201 169 110 / 0.55);
+  outline-offset: 10px;
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.6);
+  -webkit-box-reflect: below 26px linear-gradient(transparent 62%, rgb(255 255 255 / 0.16));
+}
+/* Gold portals along the aisle, drawn as hairlines so they stay light to render. */
+.walk-pillar,
+.walk-lintel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+.walk-pillar {
+  width: 1px;
+  height: var(--portal-h, 760px);
+  background: linear-gradient(to bottom, rgb(201 169 110 / 0.5), rgb(201 169 110 / 0.05));
+}
+.walk-lintel {
+  width: calc(var(--portal, 900px) * 2);
+  height: 1px;
+  background: linear-gradient(90deg, rgb(201 169 110 / 0.05), rgb(232 211 162 / 0.6), rgb(201 169 110 / 0.05));
+}
+.walk-dust {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #f1dfb4 0%, rgb(201 169 110 / 0) 70%);
+  pointer-events: none;
+}
+.walk-caption {
+  animation: walk-caption 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes walk-caption {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
 }
 /* Reduced motion: the corridor becomes a calm grid. */
@@ -420,23 +465,30 @@ body {
 .walk-static .walk-world {
   position: static;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
   padding: 2rem 1.25rem 6rem;
   transform: none !important;
 }
-.walk-static .walk-frame {
+.walk-static .walk-panel {
   position: static;
   width: auto;
   transform: none !important;
   opacity: 1 !important;
+  visibility: visible !important;
+}
+.walk-static .walk-photo {
+  -webkit-box-reflect: unset;
+}
+.walk-static .walk-pillar,
+.walk-static .walk-lintel,
+.walk-static .walk-dust,
+.walk-static [data-caption] {
+  display: none;
 }
 .walk-static [data-intro] {
   position: static;
   padding-top: 6rem;
-}
-.walk-static [data-outro] {
-  display: none;
 }
 
 /* Event map. */
