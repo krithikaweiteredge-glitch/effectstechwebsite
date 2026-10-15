@@ -119,10 +119,12 @@ export default function MotionProvider() {
           { clipPath: "inset(0% 0% 0% 0%)", duration: 1.9, ease: "expo.out", clearProps: "clipPath", scrollTrigger: st },
         );
         if (img) {
+          // The photo's own CSS hover transition would restart on every frame of
+          // this tween and stutter, so it is switched off until the reveal ends.
           gsap.fromTo(
             img,
-            { scale: 1.4 },
-            { scale: 1, duration: 2.4, ease: "expo.out", clearProps: "transform", scrollTrigger: st },
+            { scale: 1.4, transition: "none" },
+            { scale: 1, duration: 2.4, ease: "expo.out", clearProps: "transform,transition", scrollTrigger: st },
           );
         }
       });
@@ -227,6 +229,17 @@ export default function MotionProvider() {
       document.removeEventListener("pointerout", onOut);
     };
   }, []);
+
+  // Looping animations (marquees, map pins, the hero shimmer) pause while off-screen,
+  // so idle pages do no work for things nobody can see.
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.target.classList.toggle("is-offscreen", !e.isIntersecting)),
+      { rootMargin: "100px 0px" },
+    );
+    document.querySelectorAll(".marquee, [data-loop]").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [pathname]);
 
   // Magnetic buttons on precise pointers.
   useEffect(() => {

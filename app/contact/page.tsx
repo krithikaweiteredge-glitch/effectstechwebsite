@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import EnquiryForm from "@/components/EnquiryForm";
+import MapEmbed from "@/components/MapEmbed";
 import { PageHero } from "@/components/ui";
 import { getVertical, heroImages, site } from "@/lib/data";
 
@@ -81,13 +82,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
         </div>
       </section>
 
-      <iframe
-        title="Effects Tech location on Google Maps"
-        src={`https://www.google.com/maps?q=${encodeURIComponent(site.address)}&output=embed`}
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        className="block h-[420px] w-full border-0 opacity-90 grayscale sepia-[0.25]"
-      />
+      <MapEmbed address={site.address} />
     </div>
   );
 }

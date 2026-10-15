@@ -40,6 +40,7 @@ export default function Home() {
       {/* Hero */}
       <section
         data-hero
+        data-loop
         data-theme="noir"
         className="relative flex min-h-svh items-center justify-center overflow-hidden bg-black text-center text-white"
       >
@@ -195,7 +196,7 @@ export default function Home() {
       </section>
 
       {/* Map */}
-      <section className="bg-bg text-fg section" data-theme="noir">
+      <section className="bg-bg text-fg section" data-theme="noir" data-loop>
         <div className="container-x">
           <Reveal className="mb-16 text-center">
             <span className="hairline mx-auto mb-10" />

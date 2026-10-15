@@ -39,6 +39,8 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
     const arches = gsap.utils.toArray<HTMLElement>("[data-arch]", el);
     const dust = gsap.utils.toArray<HTMLElement>("[data-dust]", el);
     const intro = el.querySelector<HTMLElement>("[data-intro]")!;
+    const outro = el.querySelector<HTMLElement>("[data-outro]")!;
+    const TRAVEL = 0.84; // share of the scroll spent walking; the rest belongs to the closing line
     const caption = el.querySelector<HTMLElement>("[data-caption]")!;
     const n = frames.length;
 
@@ -69,7 +71,7 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
     const st = ScrollTrigger.create({
       trigger: el,
       start: "top top",
-      end: () => `+=${n * 700}`,
+      end: () => `+=${n * 700 + 1100}`,
       pin: true,
       onUpdate: (self) => {
         p = self.progress;
@@ -86,13 +88,17 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
     window.addEventListener("pointermove", onPointer);
     window.addEventListener("resize", layout);
 
+    let lastFrame = "";
     const tick = () => {
       if (!live) return;
       sp = lerp(sp, p, 0.08);
       pointer.sx = lerp(pointer.sx, pointer.x, 0.05);
       pointer.sy = lerp(pointer.sy, pointer.y, 0.05);
 
-      const camZ = lerp(START, END, sp);
+      const walk = clamp01(sp / TRAVEL); // camera progress along the aisle
+      const close = clamp01((sp - TRAVEL) / (1 - TRAVEL)); // closing line progress
+      const scene = 1 - clamp01(close * 2.2); // the gallery dims away as the line arrives
+      const camZ = lerp(START, END, walk) - close * D * 0.35;
       const f = (START - camZ) / D; // which photograph we are approaching
       const i = Math.max(0, Math.min(n - 1, Math.round(f)));
       if (i !== idx) {
@@ -104,6 +110,10 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
       // Camera drifts to the opposite side of the aisle and looks across at the photograph.
       cx = lerp(cx, -side * px * 0.22, 0.045);
       lx = lerp(lx, side * px * 0.92, 0.05);
+      // Skip redrawing when scroll, pointer and camera have come to rest.
+      const frameKey = `${sp.toFixed(5)}|${cx.toFixed(1)}|${lx.toFixed(1)}|${pointer.sx.toFixed(3)}|${pointer.sy.toFixed(3)}|${(p - sp).toFixed(4)}`;
+      if (frameKey === lastFrame) return;
+      lastFrame = frameKey;
       const camX = cx + pointer.sx * 60;
       const camY = Math.sin(f * Math.PI * 2) * 8 + pointer.sy * 30;
       const yaw = (Math.atan2(lx - camX + pointer.sx * 40, LEAD) * 180) / Math.PI;
@@ -119,7 +129,7 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
         panel.style.transform = `translate3d(${s * px}px, ${(k % 3) * -14}px, ${-k * D}px) translate(-50%, -50%) rotateY(${angle}deg)`;
         // Fog in the distance; gone once it has slipped past the camera.
         const fog = clamp01((4.2 * D - ahead) / (1.4 * D)) * clamp01((ahead - 0.18 * D) / (0.2 * D));
-        const op = fog * lerp(0.42, 1, focus) * clamp01((sp - 0.04) * 16);
+        const op = fog * lerp(0.42, 1, focus) * clamp01((sp - 0.04) * 16) * scene;
         panel.style.opacity = String(op);
         panel.style.visibility = op < 0.01 ? "hidden" : "visible";
       });
@@ -128,7 +138,7 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
         const z = Number(arch.dataset.z);
         const ahead = camZ - z;
         const op = clamp01((5 * D - ahead) / (2 * D)) * clamp01((ahead - 0.2 * D) / (0.4 * D));
-        arch.style.opacity = String(op * 0.9);
+        arch.style.opacity = String(op * 0.9 * scene);
         arch.style.visibility = op < 0.01 ? "hidden" : "visible";
       });
 
@@ -136,13 +146,17 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
         const z = Number(d.dataset.z);
         const ahead = camZ - z;
         const op = clamp01((4 * D - ahead) / (2 * D)) * clamp01((ahead - 0.15 * D) / (0.3 * D));
-        d.style.opacity = String(op);
+        d.style.opacity = String(op * lerp(1, 0.5, close));
         d.style.visibility = op < 0.01 ? "hidden" : "visible";
       });
 
       intro.style.opacity = String(clamp01(1 - sp * 14));
-      caption.style.opacity = String(clamp01((sp - 0.04) * 14));
-      bar.current!.style.transform = `scaleX(${sp})`;
+      caption.style.opacity = String(clamp01((sp - 0.04) * 14) * scene);
+      bar.current!.style.transform = `scaleX(${walk})`;
+      const outroOp = clamp01((close - 0.25) * 2.4);
+      outro.style.opacity = String(outroOp);
+      outro.style.visibility = outroOp < 0.02 ? "hidden" : "visible";
+      outro.style.transform = `translateY(${(1 - clamp01((close - 0.25) * 1.6)) * 40}px)`;
     };
 
     gsap.ticker.add(tick);
@@ -213,6 +227,17 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
           Walk through <em className="foil italic">our world</em>
         </h2>
         <p className="mt-8 text-[10px] tracking-[0.4em] text-white/60 uppercase">Keep scrolling — the camera moves with you</p>
+      </div>
+
+      {/* Closing line once the walk is complete */}
+      <div data-outro className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center opacity-0">
+        <span className="hairline mx-auto mb-10" />
+        <h2 className="display px-5 text-4xl sm:text-6xl lg:text-7xl">
+          Every evening, <em className="foil italic">a world of its own</em>
+        </h2>
+        <Link href="/work" data-cursor="View" className="pointer-events-auto mt-12 inline-flex items-center gap-3 text-[10px] tracking-[0.36em] text-white/70 uppercase transition-colors hover:text-[#e8d3a2]">
+          See all our work <Arrow />
+        </Link>
       </div>
 
       {/* Caption for the photograph in focus */}

@@ -1,19 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function HeroSlider({ images }: { images: string[] }) {
   const [active, setActive] = useState(0);
+  const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => setActive((a) => (a + 1) % images.length), 6000);
-    return () => clearInterval(id);
+    let visible = true;
+    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
+    io.observe(root.current!);
+    // Only change slides while the hero is on screen.
+    const id = setInterval(() => visible && setActive((a) => (a + 1) % images.length), 6000);
+    return () => {
+      clearInterval(id);
+      io.disconnect();
+    };
   }, [images.length]);
 
   return (
-    <div className="absolute inset-0" aria-hidden="true">
+    <div ref={root} className="absolute inset-0" aria-hidden="true">
       {images.map((src, i) => (
         <img
           key={src}

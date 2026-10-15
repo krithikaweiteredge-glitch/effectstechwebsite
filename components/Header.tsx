@@ -50,7 +50,7 @@ export default function Header() {
         open
           ? "bg-[#070707]"
           : scrolled
-            ? "border-b border-[#c9a96e]/20 bg-[#070707]/85 backdrop-blur-md"
+            ? "border-b border-[#c9a96e]/20 bg-[#0b0907]/95"
             : "bg-gradient-to-b from-black/60 to-transparent"
       }`}
     >

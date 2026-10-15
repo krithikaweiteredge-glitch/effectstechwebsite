@@ -78,10 +78,10 @@ body {
     hyphens: none;
   }
   .btn {
-    @apply border-accent text-accent hover:bg-accent hover:text-on-accent inline-flex min-h-12 cursor-pointer items-center justify-center gap-3 border px-9 text-[11px] font-normal tracking-[0.36em] uppercase transition duration-500;
+    @apply border-accent text-accent hover:bg-accent hover:text-on-accent inline-flex min-h-12 cursor-pointer items-center justify-center gap-3 border px-9 text-[11px] font-normal tracking-[0.36em] uppercase transition-colors duration-500;
   }
   .btn-ghost {
-    @apply hover:text-accent inline-flex min-h-12 cursor-pointer items-center justify-center gap-3 border border-current/30 px-9 text-[11px] font-normal tracking-[0.36em] uppercase transition duration-500 hover:border-current;
+    @apply hover:text-accent inline-flex min-h-12 cursor-pointer items-center justify-center gap-3 border border-current/30 px-9 text-[11px] font-normal tracking-[0.36em] uppercase transition-colors duration-500 hover:border-current;
   }
   .link-arrow {
     @apply hover:text-accent inline-flex cursor-pointer items-center gap-3 text-[11px] font-normal tracking-[0.36em] uppercase transition-colors duration-300;
@@ -171,7 +171,7 @@ body {
     var(--accent-2) 62%,
     var(--accent) 80%
   ) !important;
-  animation: foil-shift 7s linear infinite;
+  background-position: 30% 0;
   padding: 0.08em 0.14em 0.32em 0.04em;
   margin: -0.08em -0.14em -0.32em -0.04em;
   -webkit-box-decoration-break: clone;
@@ -378,7 +378,6 @@ body {
   pointer-events: none;
   opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 1.2s steps(6) infinite;
 }
 @keyframes grain {
   0% { transform: translate(0, 0); }
@@ -486,6 +485,12 @@ body {
 .walk-static [data-caption] {
   display: none;
 }
+.walk-static [data-outro] {
+  position: static;
+  opacity: 1 !important;
+  visibility: visible !important;
+  padding: 2rem 0 6rem;
+}
 .walk-static [data-intro] {
   position: static;
   padding-top: 6rem;
@@ -546,4 +551,20 @@ h3 em,
 .link-arrow {
   font-stretch: 125%;
   font-weight: 500;
+}
+
+/* The champagne shimmer is reserved for the home headline: animating a gradient
+   repaints the text every frame, so it isn't used on every gold word. */
+.hero-foil {
+  animation: foil-shift 7s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-foil {
+    animation: none;
+  }
+}
+
+.is-offscreen,
+.is-offscreen * {
+  animation-play-state: paused !important;
 }
