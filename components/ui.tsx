@@ -147,7 +147,7 @@ export function ProjectCard({
         <Photo
           src={project.image}
           alt={project.title}
-          className={wide ? "aspect-[16/9]" : tall ? "aspect-[4/5]" : "aspect-[4/3]"}
+          className={wide ? "aspect-[16/9] lg:aspect-auto lg:h-[calc((100cqw-3rem)/4)]" : tall ? "aspect-[4/5]" : "aspect-[4/3]"}
           imgClassName="transition-transform duration-[900ms] ease-out group-hover:scale-105"
         />
         <div className="mt-5 flex items-start justify-between gap-4">

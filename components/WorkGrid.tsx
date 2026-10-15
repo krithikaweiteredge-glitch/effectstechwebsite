@@ -75,7 +75,7 @@ export default function WorkGrid({ initial = "all" }: { initial?: Filter }) {
         Showing {visible.length} {visible.length === 1 ? "project" : "projects"}
       </p>
 
-      <div className="grid gap-x-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="@container grid gap-x-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((p, i) => {
           const wide = i % 4 === 0;
           return (
