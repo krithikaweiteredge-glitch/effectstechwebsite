@@ -436,6 +436,19 @@ body {
   height: 1px;
   background: linear-gradient(90deg, rgb(201 169 110 / 0.05), rgb(232 211 162 / 0.6), rgb(201 169 110 / 0.05));
 }
+/* The closing line, authored large because it sits deep in the scene. */
+.walk-finale {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(2000px, 135vw);
+  text-align: center;
+  visibility: hidden;
+  opacity: 0;
+}
+.walk-finale-title {
+  font-size: clamp(3.5rem, 9.5vw, 9.5rem);
+}
 .walk-dust {
   position: absolute;
   top: 0;
@@ -469,6 +482,9 @@ body {
   padding: 2rem 1.25rem 6rem;
   transform: none !important;
 }
+.walk-static .walk-finale {
+  position: static;
+}
 .walk-static .walk-panel {
   position: static;
   width: auto;
@@ -485,7 +501,10 @@ body {
 .walk-static [data-caption] {
   display: none;
 }
-.walk-static [data-outro] {
+.walk-static [data-finale] {
+  grid-column: 1 / -1;
+  transform: none !important;
+  width: auto;
   position: static;
   opacity: 1 !important;
   visibility: visible !important;

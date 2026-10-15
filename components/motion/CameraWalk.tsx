@@ -39,7 +39,7 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
     const arches = gsap.utils.toArray<HTMLElement>("[data-arch]", el);
     const dust = gsap.utils.toArray<HTMLElement>("[data-dust]", el);
     const intro = el.querySelector<HTMLElement>("[data-intro]")!;
-    const outro = el.querySelector<HTMLElement>("[data-outro]")!;
+    const finale = el.querySelector<HTMLElement>("[data-finale]")!;
     const TRAVEL = 0.84; // share of the scroll spent walking; the rest belongs to the closing line
     const caption = el.querySelector<HTMLElement>("[data-caption]")!;
     const n = frames.length;
@@ -59,6 +59,8 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
 
     const START = LEAD; // camera starts one photograph-length before the first
     const END = START - (n - 1) * D;
+    const FINALE_Z = -(n - 1) * D - 1.7 * D; // the closing line hangs at the end of the aisle
+    const FINALE_VIEW = 700; // how close the camera comes to it
 
     let p = 0;
     let sp = 0;
@@ -97,8 +99,10 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
 
       const walk = clamp01(sp / TRAVEL); // camera progress along the aisle
       const close = clamp01((sp - TRAVEL) / (1 - TRAVEL)); // closing line progress
-      const scene = 1 - clamp01(close * 2.2); // the gallery dims away as the line arrives
-      const camZ = lerp(START, END, walk) - close * D * 0.35;
+      const closeEase = 1 - Math.pow(1 - close, 3);
+      const scene = 1 - clamp01(close * 1.6); // the gallery dims away as the camera moves on
+      // After the last photograph the camera glides on down the aisle to the closing line.
+      const camZ = lerp(START, END, walk) - closeEase * (END - FINALE_Z - FINALE_VIEW);
       const f = (START - camZ) / D; // which photograph we are approaching
       const i = Math.max(0, Math.min(n - 1, Math.round(f)));
       if (i !== idx) {
@@ -108,8 +112,9 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
       const side = i % 2 ? 1 : -1;
 
       // Camera drifts to the opposite side of the aisle and looks across at the photograph.
-      cx = lerp(cx, -side * px * 0.22, 0.045);
-      lx = lerp(lx, side * px * 0.92, 0.05);
+      // ...and turns back to the centre of the aisle as it heads for the closing line.
+      cx = lerp(cx, -side * px * 0.22 * (1 - closeEase), 0.045);
+      lx = lerp(lx, side * px * 0.92 * (1 - closeEase), 0.05);
       // Skip redrawing when scroll, pointer and camera have come to rest.
       const frameKey = `${sp.toFixed(5)}|${cx.toFixed(1)}|${lx.toFixed(1)}|${pointer.sx.toFixed(3)}|${pointer.sy.toFixed(3)}|${(p - sp).toFixed(4)}`;
       if (frameKey === lastFrame) return;
@@ -151,12 +156,14 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
       });
 
       intro.style.opacity = String(clamp01(1 - sp * 14));
-      caption.style.opacity = String(clamp01((sp - 0.04) * 14) * scene);
+      caption.style.opacity = String(clamp01((sp - 0.04) * 14) * (1 - clamp01(close * 4)));
       bar.current!.style.transform = `scaleX(${walk})`;
-      const outroOp = clamp01((close - 0.25) * 2.4);
-      outro.style.opacity = String(outroOp);
-      outro.style.visibility = outroOp < 0.02 ? "hidden" : "visible";
-      outro.style.transform = `translateY(${(1 - clamp01((close - 0.25) * 1.6)) * 40}px)`;
+      // The closing line is part of the corridor: it glows into view far down the aisle.
+      const finaleAhead = camZ - FINALE_Z;
+      // It only appears once the last photograph has been seen, then grows as the camera arrives.
+      const finaleOp = clamp01((5 * D - finaleAhead) / (1.8 * D)) * clamp01((close - 0.03) / 0.3);
+      finale.style.opacity = String(finaleOp);
+      finale.style.visibility = finaleOp < 0.01 ? "hidden" : "visible";
     };
 
     gsap.ticker.add(tick);
@@ -215,6 +222,24 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
               <img src={fr.image} alt={fr.title} loading="lazy" className="grade walk-photo" />
             </figure>
           ))}
+          {/* Closing line, hung at the far end of the aisle */}
+          <div
+            data-finale
+            className="walk-finale"
+            style={{ transform: `translate3d(-50%, -50%, ${-(frames.length - 1) * D - 1.7 * D}px)` }}
+          >
+            <span className="hairline mx-auto mb-12" />
+            <h2 className="display walk-finale-title">
+              Every evening, <em className="foil italic">a world of its own</em>
+            </h2>
+            <Link
+              href="/work"
+              data-cursor="View"
+              className="mt-14 inline-flex items-center gap-4 text-[clamp(11px,1.2vw,16px)] tracking-[0.36em] text-white/75 uppercase transition-colors hover:text-[#e8d3a2]"
+            >
+              See all our work <Arrow />
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -227,17 +252,6 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
           Walk through <em className="foil italic">our world</em>
         </h2>
         <p className="mt-8 text-[10px] tracking-[0.4em] text-white/60 uppercase">Keep scrolling — the camera moves with you</p>
-      </div>
-
-      {/* Closing line once the walk is complete */}
-      <div data-outro className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center opacity-0">
-        <span className="hairline mx-auto mb-10" />
-        <h2 className="display px-5 text-4xl sm:text-6xl lg:text-7xl">
-          Every evening, <em className="foil italic">a world of its own</em>
-        </h2>
-        <Link href="/work" data-cursor="View" className="pointer-events-auto mt-12 inline-flex items-center gap-3 text-[10px] tracking-[0.36em] text-white/70 uppercase transition-colors hover:text-[#e8d3a2]">
-          See all our work <Arrow />
-        </Link>
       </div>
 
       {/* Caption for the photograph in focus */}
