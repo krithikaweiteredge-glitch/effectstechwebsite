@@ -76,7 +76,7 @@ export default function Showcase({
     <section ref={section} className="bg-surface relative overflow-hidden lg:h-svh">
       <div
         ref={track}
-        className="flex flex-col gap-16 px-5 py-24 sm:px-8 lg:h-full lg:w-max lg:flex-row lg:items-center lg:gap-14 lg:px-[8vw] lg:py-0"
+        className="flex flex-col gap-16 px-5 py-24 sm:px-8 lg:h-full lg:w-max lg:flex-row lg:items-start lg:gap-14 lg:px-[8vw] lg:pt-[max(7rem,calc(50svh-16.25vw-3.5rem))] lg:pb-0 xl:pt-[max(7rem,calc(50svh-14.4vw-3.5rem))]"
       >
         <div className="shrink-0 lg:w-[36vw]">
           <p className="eyebrow mb-6">{eyebrow}</p>
@@ -124,7 +124,7 @@ export default function Showcase({
           </Link>
         ))}
 
-        <div className="shrink-0 lg:w-[26vw]">
+        <div className="shrink-0 lg:w-[26vw] lg:self-center">
           <Link href={href} className="btn">
             {label} <Arrow />
           </Link>
