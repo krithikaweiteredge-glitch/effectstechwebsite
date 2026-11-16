@@ -4,6 +4,8 @@
 import { archiveForExisting, archiveProjects } from "./archive";
 
 const WP = "https://effectstech.in/wp-content/uploads";
+// The client's December 2025 wedding film, played only up to 7.2s — a guest walks into frame after that.
+const WEDDING_FILM = "/video/wedding-dec-2025.mp4#t=0,7.2";
 
 export const site = {
   name: "Effects Tech",
@@ -156,7 +158,7 @@ export const verticals: Vertical[] = [
     bandImage: "/images/work/vipul-patel-wedding/01.webp",
     overview: ["Your story,", "staged beautifully."],
     cta: "Let's begin your celebration.",
-    film: { src: "/video/wedding-dec-2025.mp4", line: ["Beneath every detail,", "a love story."] },
+    film: { src: WEDDING_FILM, line: ["Beneath every detail,", "a love story."] },
     heroVideo: "/video/bokeh.mp4",
     services: [
       { title: "Destination Weddings", text: "Palaces, beaches and hill retreats — planned and produced wherever you choose to celebrate." },
@@ -283,7 +285,7 @@ export const projects: Project[] = [
 
 // Films supplied with the archive, played in the project's opening section.
 const films: Record<string, { video: string; poster: string }> = {
-  "wedding-december-2025": { video: "/video/wedding-dec-2025.mp4", poster: "/images/work/dec-2025/film-poster.webp" },
+  "wedding-december-2025": { video: WEDDING_FILM, poster: "/images/work/dec-2025/film-poster.webp" },
 };
 for (const p of projects) {
   const film = films[p.slug];
