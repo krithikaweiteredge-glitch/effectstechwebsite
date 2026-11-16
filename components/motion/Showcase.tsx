@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { useEffect, useRef, type ReactNode } from "react";
-import { Arrow } from "../ui";
+import { Arrow, srcSet } from "../ui";
 import type { Project } from "@/lib/data";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -99,6 +99,8 @@ export default function Showcase({
             <div className="relative aspect-[16/10] overflow-hidden" data-anim="img">
               <img
                 src={p.image}
+                srcSet={srcSet(p.image)}
+                sizes="(min-width: 1024px) 60vw, 100vw"
                 alt={p.title}
                 loading="lazy"
                 data-drift

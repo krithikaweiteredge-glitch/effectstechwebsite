@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { Arrow } from "../ui";
+import { Arrow, srcSet } from "../ui";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -219,7 +219,7 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
           ))}
           {frames.map((fr, k) => (
             <figure key={k} data-panel className="walk-panel">
-              <img src={fr.image} alt={fr.title} loading="lazy" className="grade walk-photo" />
+              <img src={fr.image} srcSet={srcSet(fr.image)} sizes="60vw" alt={fr.title} loading="lazy" className="grade walk-photo" />
             </figure>
           ))}
           {/* Closing line, hung at the far end of the aisle */}

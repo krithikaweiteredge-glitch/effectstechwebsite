@@ -4,6 +4,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
+import { srcSet } from "../ui";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,6 +43,8 @@ export default function StickySteps({ steps }: { steps: Step[] }) {
               <img
                 key={i}
                 src={s.image}
+                srcSet={srcSet(s.image)}
+                sizes="45vw"
                 alt=""
                 className={`grade absolute inset-0 h-full w-full object-cover transition-all duration-[1200ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] ${
                   i === current ? "scale-100 opacity-100" : "scale-110 opacity-0"

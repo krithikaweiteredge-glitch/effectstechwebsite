@@ -1,6 +1,8 @@
 // Central content source. Everything here is plain data so it can be swapped
 // for CMS queries later without touching the page components.
 
+import { archiveForExisting, archiveProjects } from "./archive";
+
 const WP = "https://effectstech.in/wp-content/uploads";
 
 export const site = {
@@ -43,24 +45,23 @@ export const clients = [
 ];
 
 export const heroImages = [
-  `${WP}/2019/07/4-1.jpg`,
-  `${WP}/2019/07/tarun-2.jpg`,
-  `${WP}/2019/07/Birla-Event-2.jpg`,
-  `${WP}/2019/07/gq-awards-2.jpg`,
-  `${WP}/2019/01/chudhary-wedding-hyderbad-2.jpg`,
+  "/images/work/chuadhry-wedding-hyderabad/01.webp",
+  "/images/work/manish-malhotra-show-2018/01.webp",
+  "/images/work/dior/01.webp",
+  "/images/work/jw-mariott-event/02.webp",
 ];
 
 // "Faces & moments" — stand-ins until celebrity photography is supplied.
 export const faces = [
-  { image: `${WP}/2019/07/4-1.jpg`, caption: "Lakmé Fashion Week", position: "50% 20%" },
-  { image: `${WP}/2019/07/1-1.jpg`, caption: "Lakmé Fashion Week", position: "18% 30%" },
-  { image: `${WP}/2019/07/5.jpg`, caption: "Lakmé Fashion Week", position: "55% 25%" },
-  { image: `${WP}/2019/07/3-1.jpg`, caption: "Lakmé Fashion Week", position: "12% 30%" },
-  { image: `${WP}/2019/07/Vogue-Beauty-Awards-5-1.jpg`, caption: "Vogue Beauty Awards", position: "50% 50%" },
-  { image: `${WP}/2019/07/tarun-1.jpg`, caption: "Tarun Tahiliani", position: "50% 50%" },
+  { image: "/images/work/jw-mariott-event/01.webp", caption: "Shaadi by Marriott", position: "60% 25%" },
+  { image: "/images/work/manish-malhotra-show-2018/02.webp", caption: "Manish Malhotra Show", position: "50% 30%" },
+  { image: "/images/work/gq-awards/01.webp", caption: "GQ Men of the Year", position: "50% 40%" },
+  { image: "/images/work/birla-event/03.webp", caption: "Birla Celebration", position: "55% 30%" },
+  { image: "/images/work/31st-night-bipasha-basu-event/05.webp", caption: "New Year's Eve", position: "50% 35%" },
+  { image: "/images/work/om-shanti-om-fashion-show/01.webp", caption: "Om Shanti Om", position: "50% 40%" },
 ];
 
-export const houses = ["Cartier", "Vogue", "GQ", "Lakmé", "Marriott", "Tarun Tahiliani", "Rohit Bal", "Morgan Stanley", "IBM", "Tata"];
+export const houses = ["Dior", "Cartier", "Swarovski", "Manish Malhotra", "GQ", "Vogue", "Lakmé", "Marriott", "TAG Heuer", "Volkswagen", "IBM", "Morgan Stanley"];
 
 export const aboutImage = `${WP}/2019/07/about-1.jpg`;
 export const founderImage = `${WP}/2019/07/sarosh-patel-300x300.png`;
@@ -93,8 +94,8 @@ export const verticals: Vertical[] = [
     intro:
       "Fashion weeks, theatre spectacles, concerts and launches — built end to end by one production house.",
     body: "From the runway to the arena, we design experiences that put a brand in front of its audience with full sensory force — and we build every one of them ourselves, so the idea on paper is the experience on the night.",
-    image: `${WP}/2019/07/gq-awards-2.jpg`,
-    bandImage: `${WP}/2019/07/rohit-1.jpg`,
+    image: "/images/work/manish-malhotra-show-2018/01.webp",
+    bandImage: "/images/work/dior/01.webp",
     overview: ["Moments with", "full sensory force."],
     cta: "Let's stage your brand's next moment.",
     film: { src: "/video/applause.mp4", line: ["The house goes dark.", "Then the applause."] },
@@ -121,8 +122,8 @@ export const verticals: Vertical[] = [
     intro:
       "Summits, conferences, exhibitions and incentive programmes delivered for India's top corporate houses.",
     body: "Whether it is a state-of-the-art corporate meeting or a multi-day global summit, we provide turnkey MICE solutions that keep agendas on time and delegates engaged. One team plans the logistics, builds the stage and runs the room.",
-    image: `${WP}/2019/07/Morgan-Stanley-21st-Annual-India-Summit-2-1.jpg`,
-    bandImage: `${WP}/2019/07/Cognizant-Global-Account-Summit-2016-2.jpg`,
+    image: "/images/work/schott-kaisha-pharma/01.webp",
+    bandImage: "/images/work/gsk-2010/01.webp",
     overview: ["Precision,", "beautifully delivered."],
     cta: "Let's plan your next gathering.",
     film: { src: "/video/speaker.mp4", line: ["Every seat.", "Every word."] },
@@ -151,8 +152,8 @@ export const verticals: Vertical[] = [
     intro:
       "Destination and luxury weddings where décor, production and hospitality move as one.",
     body: "From planning a fairy-tale wedding to making every moment memorable, we specialise in turning your special day into an extravagant and unforgettable affair. Our wedding team brings large-format production craft to the most personal event of all.",
-    image: `${WP}/2019/07/Birla-Event-2.jpg`,
-    bandImage: `${WP}/2019/01/chudhary-wedding-hyderbad-2.jpg`,
+    image: "/images/work/chuadhry-wedding-hyderabad/01.webp",
+    bandImage: "/images/work/roman-wedding-2009/01.webp",
     overview: ["Your story,", "staged beautifully."],
     cta: "Let's begin your celebration.",
     film: { src: "/video/ceiling.mp4", line: ["Beneath every detail,", "a love story."] },
@@ -187,7 +188,7 @@ export type Project = {
   gallery?: string[];
 };
 
-export const projects: Project[] = [
+const legacyProjects: Project[] = [
   { slug: "rohit-bal-ajsk-tarun-tahiliani", title: "Rohit Bal | AJSK | Tarun Tahiliani", vertical: "experiences", category: "Fashion Show", image: `${WP}/2019/07/tarun-2.jpg`,
     gallery: [`${WP}/2019/07/tarun-2.jpg`, `${WP}/2019/07/tarun-1.jpg`, `${WP}/2019/07/rohit-1.jpg`, `${WP}/2019/07/tarun-4.jpg`, `${WP}/2019/07/tarun-3.jpg`, `${WP}/2019/07/AJSK-2.jpg`, `${WP}/2019/07/India-Bridal-Fashion-Week-3-1.jpg`, `${WP}/2019/07/India-Bridal-Fashion-Week-7-1.jpg`, `${WP}/2019/07/AJSK-1.jpg`] },
   { slug: "birla-family-celebration", title: "Mr. Birla's Family Celebration", vertical: "weddings", category: "Wedding", image: `${WP}/2019/07/Birla-Event-2.jpg`,
@@ -226,6 +227,57 @@ export const projects: Project[] = [
     gallery: [`${WP}/2019/09/Tata-Ace-1.jpg`, `${WP}/2019/09/Tata-Ace-2.jpg`, `${WP}/2019/09/Tata-Ace-3.jpg`, `${WP}/2019/09/Tata-Ace-4.jpg`] },
   { slug: "enchanted-valley-carnival", title: "Enchanted Valley Carnival", vertical: "experiences", category: "IPs", image: `${WP}/2019/09/portfolio-14-thumbnail.jpg`,
     gallery: [`${WP}/2019/09/Enchanted-Valley-Carnival-1.jpg`, `${WP}/2019/09/Enchanted-Valley-Carnival-2.jpg`, `${WP}/2019/09/Enchanted-Valley-Carnival-3.jpg`, `${WP}/2019/09/Enchanted-Valley-Carnival-4.jpg`] },
+];
+
+// Events the site already showed take their new high-resolution photos from the archive.
+const legacyWithArchive = legacyProjects.map((p): Project => {
+  const fresh = archiveForExisting[p.slug];
+  if (!fresh) return p;
+  switch (p.slug) {
+    case "gq-and-vogue": // archive has the GQ awards; keep the Vogue frames from before
+      return { ...p, image: fresh[0], gallery: [...fresh, ...(p.gallery ?? []).filter((g) => g.includes("Vogue"))] };
+    case "lakme-fashion":
+      return { ...p, gallery: [...(p.gallery ?? []), ...fresh] };
+    case "birla-family-celebration":
+      return { ...p, image: fresh[0], gallery: [...fresh, ...(p.gallery ?? [])] };
+    default: // same event, better photos
+      return { ...p, image: fresh[0], gallery: fresh };
+  }
+});
+
+// Running order: the most glamorous work leads. The first six feed the home showcase,
+// the next twelve the gallery walk.
+const FEATURED = [
+  "manish-malhotra-show-2018",
+  "shaadi-by-marriott",
+  "chudhary-wedding-hyderabad",
+  "gq-and-vogue",
+  "dior",
+  "birla-family-celebration",
+  "new-years-eve-bipasha-basu",
+  "zubin-mehta-concert",
+  "rohit-bal-tag-heuer",
+  "om-shanti-om-fashion-show",
+  "volkswagen-jetta-launch",
+  "roman-wedding-2009",
+  "lycra-mtv-awards",
+  "india-couture-week-2009",
+  "singhania-wedding-2009",
+  "cnbc-awards-2006",
+  "swarovski-fashion-show",
+  "biyani-wedding",
+  "rohit-bal-ajsk-tarun-tahiliani",
+  "lakme-fashion",
+  "cartier",
+];
+// Shown last until the client confirms it can be featured (the Prime Minister attended).
+const LAST = ["aia-sesquicentennial-2015"];
+
+const allProjects = [...archiveProjects, ...legacyWithArchive];
+export const projects: Project[] = [
+  ...FEATURED.map((slug) => allProjects.find((p) => p.slug === slug)!),
+  ...allProjects.filter((p) => !FEATURED.includes(p.slug) && !LAST.includes(p.slug)),
+  ...LAST.map((slug) => allProjects.find((p) => p.slug === slug)!),
 ];
 
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);

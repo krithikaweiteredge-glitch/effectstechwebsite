@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { Arrow } from "../ui";
+import { Arrow, srcSet } from "../ui";
 
 export type MapPin = {
   city: string;
@@ -55,7 +55,7 @@ export default function EventMap({ pins, children }: { pins: MapPin[]; children:
       <div aria-live="polite">
         <div key={pin.city} className="map-card">
           <div className="relative aspect-[16/10] overflow-hidden">
-            <img src={pin.image} alt="" className="grade absolute inset-0 h-full w-full object-cover" />
+            <img src={pin.image} srcSet={srcSet(pin.image)} sizes="(min-width: 1024px) 40vw, 100vw" alt="" className="grade absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <p className="font-serif foil absolute bottom-4 left-6 text-5xl italic">{pin.city}</p>
           </div>

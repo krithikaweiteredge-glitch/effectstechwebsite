@@ -4,7 +4,7 @@
 import { gsap } from "gsap";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Arrow } from "../ui";
+import { Arrow, srcSet } from "../ui";
 
 type Item = { title: string; text: string; image: string; href?: string };
 
@@ -72,6 +72,8 @@ export default function HoverReveal({ items }: { items: Item[] }) {
           <img
             key={i}
             src={item.image}
+            srcSet={srcSet(item.image)}
+            sizes="260px"
             alt=""
             className={`grade absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${
               active === i ? "scale-100 rotate-0 opacity-100" : "scale-75 -rotate-6 opacity-0"

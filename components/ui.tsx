@@ -15,6 +15,11 @@ export function Arrow({ className = "" }: { className?: string }) {
 
 // Remote photo with a tonal fallback behind it, so layouts hold while images
 // load or if a source is unavailable.
+// Archive photos ship as NN.webp (1920px) plus NN-m.webp (960px); let the browser pick.
+export function srcSet(src: string) {
+  return /^\/images\/work\/.+\.webp$/.test(src) ? `${src.replace(/\.webp$/, "-m.webp")} 960w, ${src} 1920w` : undefined;
+}
+
 export function Photo({
   src,
   alt,
@@ -22,6 +27,7 @@ export function Photo({
   imgClassName = "",
   priority = false,
   position,
+  sizes = "(min-width: 1024px) 50vw, 100vw",
 }: {
   src: string;
   alt: string;
@@ -29,11 +35,14 @@ export function Photo({
   imgClassName?: string;
   priority?: boolean;
   position?: string;
+  sizes?: string;
 }) {
   return (
     <div data-anim="img" className={`bg-surface relative overflow-hidden ${className}`}>
       <img
         src={src}
+        srcSet={srcSet(src)}
+        sizes={srcSet(src) ? sizes : undefined}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
