@@ -77,9 +77,9 @@ export default function WorkGrid({ initial = "all" }: { initial?: Filter }) {
 
       <div className="@container grid gap-x-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((p, i) => {
-          const wide = i % 4 === 0;
+          const wide = i % 7 === 0 || i % 7 === 6;
           return (
-            <div key={`${vertical}-${category}-${p.slug}`} className={wide ? "sm:col-span-2" : ""}>
+            <div key={`${vertical}-${category}-${p.slug}`} className={wide ? "lg:col-span-2" : ""}>
               <ProjectCard project={p} wide={wide} delay={(i % 3) * 80} />
             </div>
           );

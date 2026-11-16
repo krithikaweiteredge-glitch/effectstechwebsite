@@ -76,7 +76,7 @@ export default function Showcase({
     <section ref={section} className="bg-surface relative overflow-hidden lg:h-svh">
       <div
         ref={track}
-        className="flex flex-col gap-16 px-5 py-24 sm:px-8 lg:h-full lg:w-max lg:flex-row lg:items-start lg:gap-14 lg:px-[8vw] lg:pt-[max(7rem,calc(50svh-16.25vw-3.5rem))] lg:pb-0 xl:pt-[max(7rem,calc(50svh-14.4vw-3.5rem))]"
+        className="flex flex-col gap-16 px-5 py-24 sm:px-8 lg:h-full lg:w-max lg:flex-row lg:items-start lg:gap-14 lg:px-[8vw] lg:pt-[max(6.5rem,calc((100svh-min(32.5vw,100svh-22rem)-9rem)/2))] lg:pb-0 xl:pt-[max(6.5rem,calc((100svh-min(28.75vw,100svh-22rem)-9rem)/2))]"
       >
         <div className="shrink-0 lg:w-[36vw]">
           <p className="eyebrow mb-6">{eyebrow}</p>
@@ -94,7 +94,7 @@ export default function Showcase({
             key={p.slug}
             href={`/work/${p.slug}`}
             data-cursor="View"
-            className="group block shrink-0 cursor-pointer lg:w-[52vw] xl:w-[46vw]"
+            className="group block shrink-0 cursor-pointer lg:w-[min(52vw,calc((100svh-22rem)*1.6))] xl:w-[min(46vw,calc((100svh-22rem)*1.6))]"
           >
             <div className="relative aspect-[16/10] overflow-hidden" data-anim="img">
               <img
@@ -132,7 +132,7 @@ export default function Showcase({
           </Link>
         </div>
       </div>
-      <div className="absolute inset-x-[8vw] bottom-10 hidden h-px bg-white/10 lg:block">
+      <div className="absolute inset-x-[8vw] bottom-6 hidden h-px bg-white/10 lg:block">
         <div data-progress className="bg-accent h-full origin-left scale-x-0" />
       </div>
     </section>
