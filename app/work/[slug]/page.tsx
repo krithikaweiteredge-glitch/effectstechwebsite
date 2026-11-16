@@ -43,7 +43,7 @@ export default async function ProjectPage({ params }: Props) {
 
   return (
     <div data-theme={project.vertical} className="bg-bg text-fg">
-      <PageHero eyebrow={`${vertical.short} · ${project.category}`} title={project.title} image={project.image} />
+      <PageHero eyebrow={`${vertical.short} · ${project.category}`} title={project.title} image={project.image} video={project.video} />
 
       <section className="container-x section">
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.6fr] lg:gap-24">

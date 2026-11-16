@@ -2,11 +2,17 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Reveal from "../Reveal";
 import { Arrow, srcSet } from "../ui";
 
 export type GalleryItem = { image: string; event?: string; href?: string; w?: number; h?: number };
+
+const subscribeResize = (cb: () => void) => {
+  window.addEventListener("resize", cb);
+  return () => window.removeEventListener("resize", cb);
+};
+const columnsForWidth = () => (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1);
 
 // A photo wall with a full-screen viewer: click to open, arrows / swipe to move,
 // Esc to close. "masonry" keeps each photo's own shape; "editorial" alternates
@@ -22,6 +28,20 @@ export default function Gallery({
 }) {
   const [open, setOpen] = useState<number | null>(null);
   const startX = useRef<number | null>(null);
+
+  // Masonry: each photo goes into whichever column is currently shortest (known
+  // proportions), so every column ends at nearly the same point.
+  const columnCount = useSyncExternalStore(subscribeResize, columnsForWidth, () => 3);
+  const columns = useMemo(() => {
+    const cols: { it: GalleryItem; i: number }[][] = Array.from({ length: columnCount }, () => []);
+    const heights = new Array(columnCount).fill(0);
+    items.forEach((it, i) => {
+      const shortest = heights.indexOf(Math.min(...heights));
+      cols[shortest].push({ it, i });
+      heights[shortest] += (it.w && it.h ? it.h / it.w : 0.75) + 0.02; // + the gap
+    });
+    return cols;
+  }, [items, columnCount]);
 
   const close = useCallback(() => setOpen(null), []);
   const step = useCallback((d: number) => setOpen((i) => (i === null ? i : (i + d + items.length) % items.length)), [items.length]);
@@ -72,11 +92,15 @@ export default function Gallery({
   return (
     <>
       {layout === "masonry" ? (
-        <div className="columns-1 gap-3 sm:columns-2 lg:columns-3">
-          {items.map((it, i) => (
-            <Reveal key={`${it.image}-${i}`} delay={(i % 3) * 80} className="mb-3 break-inside-avoid">
-              {tile(it, i, "", "block h-auto w-full", "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw")}
-            </Reveal>
+        <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
+          {columns.map((column, c) => (
+            <div key={c} className="flex flex-col gap-3">
+              {column.map(({ it, i }) => (
+                <Reveal key={`${it.image}-${i}`} delay={c * 80}>
+                  {tile(it, i, "", "block h-auto w-full", "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw")}
+                </Reveal>
+              ))}
+            </div>
           ))}
         </div>
       ) : (

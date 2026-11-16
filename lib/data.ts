@@ -153,7 +153,7 @@ export const verticals: Vertical[] = [
       "Destination and luxury weddings where décor, production and hospitality move as one.",
     body: "From planning a fairy-tale wedding to making every moment memorable, we specialise in turning your special day into an extravagant and unforgettable affair. Our wedding team brings large-format production craft to the most personal event of all.",
     image: "/images/work/chuadhry-wedding-hyderabad/01.webp",
-    bandImage: "/images/work/roman-wedding-2009/01.webp",
+    bandImage: "/images/work/vipul-patel-wedding/01.webp",
     overview: ["Your story,", "staged beautifully."],
     cta: "Let's begin your celebration.",
     film: { src: "/video/ceiling.mp4", line: ["Beneath every detail,", "a love story."] },
@@ -186,6 +186,7 @@ export type Project = {
   location?: string;
   image: string;
   gallery?: string[];
+  video?: string; // looping film shown in the project's opening section
 };
 
 const legacyProjects: Project[] = [
@@ -279,6 +280,15 @@ export const projects: Project[] = [
   ...allProjects.filter((p) => !FEATURED.includes(p.slug) && !LAST.includes(p.slug)),
   ...LAST.map((slug) => allProjects.find((p) => p.slug === slug)!),
 ];
+
+// Films supplied with the archive, played in the project's opening section.
+const films: Record<string, { video: string; poster: string }> = {
+  "wedding-december-2025": { video: "/video/wedding-dec-2025.mp4", poster: "/images/work/dec-2025/film-poster.webp" },
+};
+for (const p of projects) {
+  const film = films[p.slug];
+  if (film) Object.assign(p, { video: film.video, image: film.poster, gallery: [film.poster, ...(p.gallery ?? [])] });
+}
 
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
 
