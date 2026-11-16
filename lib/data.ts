@@ -156,7 +156,7 @@ export const verticals: Vertical[] = [
     bandImage: "/images/work/vipul-patel-wedding/01.webp",
     overview: ["Your story,", "staged beautifully."],
     cta: "Let's begin your celebration.",
-    film: { src: "/video/ceiling.mp4", line: ["Beneath every detail,", "a love story."] },
+    film: { src: "/video/wedding-dec-2025.mp4", line: ["Beneath every detail,", "a love story."] },
     heroVideo: "/video/bokeh.mp4",
     services: [
       { title: "Destination Weddings", text: "Palaces, beaches and hill retreats — planned and produced wherever you choose to celebrate." },
