@@ -9,6 +9,7 @@ import { site, verticals } from "@/lib/data";
 const links = [
   ...verticals.map((v) => ({ href: `/${v.slug}`, label: v.short })),
   { href: "/work", label: "Our Work" },
+  { href: "/spotlight", label: "Spotlight" },
   { href: "/about", label: "About" },
   { href: "/insights", label: "Insights" },
 ];

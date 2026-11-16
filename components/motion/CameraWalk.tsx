@@ -193,7 +193,7 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
   const f = frames[current];
 
   return (
-    <section ref={section} data-theme="noir" className="walk relative h-svh overflow-hidden bg-[#070605] text-white" aria-label="A walk through our work">
+    <section ref={section} data-theme="noir" className="walk relative h-svh overflow-hidden text-white" aria-label="A walk through our work">
       <div className="walk-stage absolute inset-0">
         <div ref={world} className="walk-world absolute top-1/2 left-1/2">
           {/* Gold portals framing the aisle: hairline pillars and lintel (cheap to render) */}
@@ -219,7 +219,16 @@ export default function CameraWalk({ frames }: { frames: Frame[] }) {
           ))}
           {frames.map((fr, k) => (
             <figure key={k} data-panel className="walk-panel">
-              <img src={fr.image} srcSet={srcSet(fr.image)} sizes="60vw" alt={fr.title} loading="lazy" className="grade walk-photo" />
+              {/* Gallery lighting: a warm beam falling on the frame and a glow on the floor */}
+              <span className="walk-beam" aria-hidden="true" />
+              <span className="walk-pool" aria-hidden="true" />
+              <span className="walk-frame">
+                <img src={fr.image} srcSet={srcSet(fr.image)} sizes="60vw" alt={fr.title} loading="lazy" className="grade walk-photo" />
+              </span>
+              <figcaption className="walk-plaque">
+                <span>No. {String(k + 1).padStart(2, "0")}</span>
+                {fr.title}
+              </figcaption>
             </figure>
           ))}
           {/* Closing line, hung at the far end of the aisle */}

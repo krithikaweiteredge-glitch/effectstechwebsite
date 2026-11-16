@@ -400,6 +400,12 @@ body {
   transform-style: preserve-3d;
   will-change: transform;
 }
+.walk {
+  /* Warm, low gallery light at the heart of the aisle fading to black. */
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 58%, rgb(74 52 26 / 0.55), transparent 70%),
+    linear-gradient(#060504, #0c0906 55%, #050403);
+}
 .walk-panel {
   position: absolute;
   top: 0;
@@ -408,15 +414,74 @@ body {
   margin: 0;
   will-change: transform, opacity;
 }
+/* Gold-leaf frame with a dark inner mat, like a museum piece. */
+.walk-frame {
+  position: relative;
+  display: block;
+  padding: clamp(6px, 0.9vw, 12px);
+  background: linear-gradient(135deg, #6f5121 0%, #e8d3a2 22%, #8a6a2f 45%, #f6e7c1 62%, #9c7a3c 80%, #5c4219 100%);
+  box-shadow:
+    0 40px 90px rgb(0 0 0 / 0.7),
+    0 0 60px rgb(232 211 162 / 0.08);
+  -webkit-box-reflect: below 22px linear-gradient(transparent 64%, rgb(255 255 255 / 0.14));
+}
+.walk-frame::after {
+  /* the beam catching the top of the frame */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgb(255 244 220 / 0.16), transparent 45%);
+  pointer-events: none;
+}
 .walk-photo {
   display: block;
   width: 100%;
   aspect-ratio: 1300 / 850;
   object-fit: cover;
-  outline: 1px solid rgb(201 169 110 / 0.55);
-  outline-offset: 10px;
-  box-shadow: 0 30px 80px rgb(0 0 0 / 0.6);
-  -webkit-box-reflect: below 26px linear-gradient(transparent 62%, rgb(255 255 255 / 0.16));
+  border: clamp(4px, 0.55vw, 8px) solid #0d0b09;
+}
+.walk-beam {
+  /* a soft spotlight glow falling onto the frame, not a hard cone */
+  position: absolute;
+  left: -10%;
+  bottom: 70%;
+  width: 120%;
+  height: 110%;
+  background: radial-gradient(ellipse 34% 100% at 50% 100%, rgb(255 226 170 / 0.17), rgb(255 226 170 / 0.05) 55%, transparent 75%);
+  pointer-events: none;
+}
+.walk-pool {
+  position: absolute;
+  left: -25%;
+  top: 92%;
+  width: 150%;
+  height: 70%;
+  background: radial-gradient(ellipse at 50% 30%, rgb(232 196 130 / 0.22), transparent 62%);
+  pointer-events: none;
+}
+/* Engraved plaque beneath each frame. */
+.walk-plaque {
+  position: absolute;
+  top: calc(100% + 26px);
+  left: 0;
+  right: 0;
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-size: clamp(14px, 1.4vw, 22px);
+  color: #e8d3a2;
+  text-align: center;
+  letter-spacing: 0.01em;
+  opacity: 0.9;
+}
+.walk-plaque span {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-display), sans-serif;
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgb(201 169 110 / 0.75);
 }
 /* Gold portals along the aisle, drawn as hairlines so they stay light to render. */
 .walk-pillar,
@@ -492,8 +557,16 @@ body {
   opacity: 1 !important;
   visibility: visible !important;
 }
-.walk-static .walk-photo {
+.walk-static .walk-frame {
   -webkit-box-reflect: unset;
+}
+.walk-static .walk-beam,
+.walk-static .walk-pool {
+  display: none;
+}
+.walk-static .walk-plaque {
+  position: static;
+  margin-top: 1rem;
 }
 .walk-static .walk-pillar,
 .walk-static .walk-lintel,
@@ -586,4 +659,20 @@ h3 em,
 .is-offscreen,
 .is-offscreen * {
   animation-play-state: paused !important;
+}
+
+/* Full-screen photo viewer. */
+.viewer-in {
+  animation: viewer-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes viewer-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewer-in {
+    animation: none;
+  }
 }

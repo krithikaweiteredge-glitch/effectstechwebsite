@@ -6,7 +6,8 @@ import IndiaMap from "@/components/IndiaMap";
 import CameraWalk from "@/components/motion/CameraWalk";
 import Showcase from "@/components/motion/Showcase";
 import { Arrow, Photo } from "@/components/ui";
-import { faces, heroImages, houses, projects, stats, verticals, getVertical } from "@/lib/data";
+import { walkFrames } from "@/lib/walk";
+import { faces, heroImages, houses, projects, stats, verticals } from "@/lib/data";
 
 // Mosaic placement for the six "faces" tiles on a 4-column grid.
 const faceSpans = [
@@ -27,13 +28,6 @@ const tileAccent: Record<string, string> = {
 
 export default function Home() {
   const signature = projects.slice(0, 6);
-  // The gallery walk uses the projects not already in the showcase, so nothing appears twice.
-  const frames = projects.slice(6, 18).map((p) => ({
-    image: p.gallery?.[2] ?? p.image,
-    title: p.title,
-    meta: `${getVertical(p.vertical)?.short} · ${p.location ?? p.category}`,
-    href: `/work/${p.slug}`,
-  }));
 
   return (
     <>
@@ -111,7 +105,7 @@ export default function Home() {
       </section>
 
       {/* Gallery walk */}
-      <CameraWalk frames={frames} />
+      <CameraWalk frames={walkFrames} />
 
       {/* Faces & moments */}
       <section className="pb-24 sm:pb-32 lg:pb-44">
@@ -123,8 +117,8 @@ export default function Home() {
                 In our <em className="foil italic">spotlight</em>
               </h2>
             </div>
-            <Link href="/work" className="link-arrow shrink-0">
-              The full portfolio <Arrow />
+            <Link href="/spotlight" className="link-arrow shrink-0">
+              Enter the spotlight <Arrow />
             </Link>
           </Reveal>
           <div className="grid auto-rows-[180px] grid-cols-2 gap-2 sm:auto-rows-[240px] lg:auto-rows-[300px] lg:grid-cols-4 lg:gap-3">

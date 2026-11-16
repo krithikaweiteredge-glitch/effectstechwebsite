@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Gallery from "@/components/motion/Gallery";
 import Reveal from "@/components/Reveal";
-import { Arrow, PageHero, Photo, ProjectCard, SectionHead } from "@/components/ui";
+import { Arrow, PageHero, ProjectCard, SectionHead } from "@/components/ui";
 import { caseStudyCopy, getProject, getVertical, projects } from "@/lib/data";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -74,16 +75,15 @@ export default async function ProjectPage({ params }: Props) {
             </ul>
           </Reveal>
         </div>
-        <div className="mt-20 grid gap-2 sm:grid-cols-2 lg:gap-3">
-          {(project.gallery ?? [project.image]).map((src, i) => (
-            <Reveal key={src} delay={(i % 2) * 100} className={i % 3 === 0 ? "sm:col-span-2" : ""}>
-              <Photo
-                src={src}
-                alt={`${project.title} — photograph ${i + 1}`}
-                className={i % 3 === 0 ? "aspect-[16/8]" : "aspect-[4/3]"}
-              />
-            </Reveal>
-          ))}
+        <div className="mt-20">
+          <p className="text-muted mb-8 text-center text-[10px] tracking-[0.36em] uppercase">
+            {(project.gallery ?? [project.image]).length} photographs · click to view
+          </p>
+          <Gallery
+            layout="editorial"
+            captions={false}
+            items={(project.gallery ?? [project.image]).map((image) => ({ image, event: project.title }))}
+          />
         </div>
       </section>
 

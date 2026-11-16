@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/work",
     "/insights",
+    "/spotlight",
     "/contact",
     ...verticals.map((v) => `/${v.slug}`),
     ...projects.map((p) => `/work/${p.slug}`),
